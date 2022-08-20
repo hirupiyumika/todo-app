@@ -2,7 +2,7 @@ const { Todo, validate } = require('../models/todo')
 
 const addTodo = async (req, res, next) => {
     const { error } = validate(req.body);
-    console.log(req.body)
+
     if (error) return res.status(404).send(error.details[0].message);
     try {
         todo = new Todo({
@@ -55,39 +55,48 @@ const getDoneTodos = async (req, res, next) => {
     }
 }
 
-const updateTodo = async (req,res,next) => {
-    const { error } = validate(req.body); 
+const updateTodo = async (req, res, next) => {
+    const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
-    try{
+    try {
         const todo = await Todo.findByIdAndUpdate(req.params.id,
             {
                 task: req.body.task,
                 status: req.body.status
             }
-            ,{new: true});
+            , { new: true });
 
-          if (!todo) return res.status(404).send('The task with the given ID was not found.');
+        if (!todo) return res.status(404).send('The task with the given ID was not found.');
 
-          res.send({
-            _id: todo._id,
-            task: todo.task,
-            status: todo.status
-        })
-    }catch(ex){
-        next(ex)
-    }
-}
-
-const deleteTodo = async (req,res,next) => {
-    try{
-        const todo = await Todo.findByIdAndRemove(req.params.id);
-        if(!todo) return res.status(404).send('The todo with the given ID was not found');
         res.send({
             _id: todo._id,
             task: todo.task,
             status: todo.status
         })
-    }catch(ex){
+    } catch (ex) {
+        next(ex)
+    }
+}
+
+const deleteTodo = async (req, res, next) => {
+    try {
+        const todo = await Todo.findByIdAndRemove(req.params.id);
+        if (!todo) return res.status(404).send('The todo with the given ID was not found');
+        res.send({
+            _id: todo._id,
+            task: todo.task,
+            status: todo.status
+        })
+    } catch (ex) {
+        next(ex)
+    }
+}
+
+const deleteAllTodos = async (req, res, next) => {
+    try {
+        const todo = await Todo.deleteMany({});;
+        res.send(todo)
+    } catch (ex) {
         next(ex)
     }
 }
@@ -98,5 +107,6 @@ module.exports = {
     getPendingTodos,
     getDoneTodos,
     updateTodo,
-    deleteTodo
+    deleteTodo,
+    deleteAllTodos
 };
