@@ -5,7 +5,7 @@ const { addTodo,getAllTodos,getPendingTodos,getDoneTodos,updateTodo,deleteTodo,d
 router.post('/todo', addTodo);
 router.get('/all/todos', getAllTodos);
 router.get('/pending/todos', getPendingTodos);
-router.get('/complect/todos', getDoneTodos);
+router.get('/complete/todos', getDoneTodos);
 router.put('/todo/:id', updateTodo);
 router.delete('/todo/:id', deleteTodo);
 router.delete('/all/todos', deleteAllTodos);
