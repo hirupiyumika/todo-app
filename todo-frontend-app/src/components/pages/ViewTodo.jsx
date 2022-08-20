@@ -11,7 +11,7 @@ const ViewTodo = () => {
     doneTodoList,
   } = useContext(TodoContext);
 
-  const [todoList, setTodoList] = useState([]);
+  const [todoList, setTodoList] = useState("");
 
   useEffect(() => {}, [todoList]);
 
@@ -22,36 +22,30 @@ const ViewTodo = () => {
 
   const onDelete = async (id) => {
     await deleteTodoHandler(id);
-    window.location = "/";
   };
 
   const onDeleteAll = async () => {
     await deleteAllTodoHandler();
-    window.location = "/";
   };
 
   return (
     <>
       <div className="controls">
         <div className="filters">
-          <span
-            className="tab"
-            tabIndex="1"
-            onClick={(e) => setTodoList(allTodoList)}
-          >
-            All
+          <span className="tab" tabIndex="1" onClick={(e) => setTodoList("")}>
+            Task
           </span>
           <span
             className="tab"
             tabIndex="2"
-            onClick={(e) => setTodoList(pendingTodoList)}
+            onClick={(e) => setTodoList("pending")}
           >
             Pending
           </span>
           <span
             className="tab"
             tabIndex="3"
-            onClick={(e) => setTodoList(doneTodoList)}
+            onClick={(e) => setTodoList("done")}
           >
             Completed
           </span>
@@ -61,44 +55,63 @@ const ViewTodo = () => {
         </button>
       </div>
       <ul className="task-box">
-        {todoList.map((t, index) => (
-          <li className="task" key={index}>
-            <label>
-              {t.status == "pending" ? (
-                <p>{t.task}</p>
-              ) : (
-                <p className="checked">{t.task}</p>
-              )}
-            </label>
-            <div style={{ float: "right", position: "relative" }}>
-              {t.status == "pending" ? (
-                <i
-                  className="material-icons"
-                  style={{ color: "gray", cursor: "pointer" }}
-                  onClick={(e) => onEdit(t._id, t.task, "done")}
-                >
-                  task_alt
-                </i>
-              ) : (
-                <i
-                  className="material-icons"
-                  style={{ color: "green", cursor: "pointer" }}
-                  onClick={(e) => onEdit(t._id, t.task, "pending")}
-                >
-                  task_alt
-                </i>
-              )}
+        {!todoList &&
+          allTodoList.map((t, index) => (
+            <li className="task" key={index}>
+              <label>
+                {t.status === "pending" ? (
+                  <p>{t.task}</p>
+                ) : (
+                  <p className="checked">{t.task}</p>
+                )}
+              </label>
+              <div style={{ float: "right", position: "relative" }}>
+                {t.status === "pending" ? (
+                  <i
+                    className="material-icons"
+                    style={{ color: "gray", cursor: "pointer" }}
+                    onClick={(e) => onEdit(t._id, t.task, "done")}
+                  >
+                    task_alt
+                  </i>
+                ) : (
+                  <i
+                    className="material-icons"
+                    style={{ color: "green", cursor: "pointer" }}
+                    onClick={(e) => onEdit(t._id, t.task, "pending")}
+                  >
+                    task_alt
+                  </i>
+                )}
 
-              <i
-                className="material-icons"
-                style={{ color: "red", cursor: "pointer" }}
-                onClick={(e) => onDelete(t._id)}
-              >
-                delete
-              </i>
-            </div>
-          </li>
-        ))}
+                <i
+                  className="material-icons"
+                  style={{ color: "red", cursor: "pointer" }}
+                  onClick={(e) => onDelete(t._id)}
+                >
+                  delete
+                </i>
+              </div>
+            </li>
+          ))}
+
+        {todoList === "pending" &&
+          pendingTodoList.map((t, index) => (
+            <li className="task" key={index}>
+              <label>
+                <p>{t.task}</p>
+              </label>
+            </li>
+          ))}
+
+        {todoList === "done" &&
+          doneTodoList.map((t, index) => (
+            <li className="task" key={index}>
+              <label>
+                <p className="checked">{t.task}</p>
+              </label>
+            </li>
+          ))}
       </ul>
     </>
   );

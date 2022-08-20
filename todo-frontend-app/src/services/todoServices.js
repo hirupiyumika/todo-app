@@ -35,5 +35,5 @@ export function pendingTodos() {
 }
 
 export function doneTodos() {
-    return http.get(`${apiEndpoint}/complect/todos`);
+    return http.get(`${apiEndpoint}/complete/todos`);
 } 

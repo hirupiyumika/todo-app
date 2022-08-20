@@ -53,6 +53,9 @@ class TodoProvider extends Component {
 
   deleteAllTodoHandler = async () => {
     try {
+      this.setState({ allTodoList: [] });
+      this.setState({ pendingTodoList: [] });
+      this.setState({ doneTodoList: [] });
       const response = await deleteAllTodos()
       return response;
     } catch (ex) {
